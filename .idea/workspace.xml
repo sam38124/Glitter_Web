@@ -48,6 +48,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KotlinMultiplatform">
+    <allAvailableExecutables />
+  </component>
   <component name="ProjectId" id="1lg9wQw6vxSiE6uekhdQ6RqaKFs" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -58,7 +61,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/util" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -78,7 +81,7 @@
       <recent name="$PROJECT_DIR$/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.ApplicationKt">
+  <component name="RunManager" selected="Gradle.Glitter [shadowJar]">
     <configuration name="Glitter [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -95,7 +98,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="ApplicationKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
@@ -126,12 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.ApplicationKt" />
-        <item itemvalue="Kotlin.TestKt" />
         <item itemvalue="Gradle.Glitter [shadowJar]" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -147,11 +151,12 @@
       <workItem from="1608015656264" duration="3423000" />
       <workItem from="1608284427415" duration="2171000" />
       <workItem from="1609294253752" duration="2144000" />
+      <workItem from="1621477568282" duration="54000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
     <state x="565" y="334" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608008894396">

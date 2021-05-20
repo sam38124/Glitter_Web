@@ -56,34 +56,6 @@ object Glitter {
                 cookie<DataBase>("DataBase")
                 session(this)
             }
-            //存紀錄
-            post("/setPro") {
-                val pro = call.sessions.get("Pro")
-                var data: MutableMap<String, String> = mutableMapOf()
-                if (pro != null) {
-                    data = Gson().fromJson<MutableMap<String, String>>(
-                        if (pro.toString().isEmpty()) "{}" else (pro as ProData).data, object :
-                            TypeToken<MutableMap<String, String>>() {}.type
-                    )
-                }
-                data[call.parameters["key"]!!] = call.receiveText()
-                call.sessions.set("Pro", ProData(Gson().toJson(data)))
-                println("setPro--${call.sessions.get("Pro")}")
-                call.respondText("true")
-            }
-            //拿紀錄
-            post("/getPro") {
-                val pro = call.sessions.get("Pro")
-                var data: MutableMap<String, String> = mutableMapOf()
-                if (pro != null) {
-                    data = Gson().fromJson<MutableMap<String, String>>(
-                        if (pro.toString().isEmpty()) "{}" else (pro as ProData).data, object :
-                            TypeToken<MutableMap<String, String>>() {}.type
-                    )
-                    println("getPro--" + Gson().toJson(data))
-                }
-                call.respondText(Gson().toJson(data))
-            }
             //文件更新
             File_Refresh.fileRefresh(rout, arrayOf("Glitter"), defineAppRout)
             //取得DataBase
