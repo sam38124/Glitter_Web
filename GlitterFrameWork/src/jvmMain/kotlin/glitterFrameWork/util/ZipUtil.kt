@@ -1,13 +1,11 @@
 package glitterFrameWork.util
 
 
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 object ZipUtil{
@@ -28,20 +26,41 @@ object ZipUtil{
             System.err.println("I/O error: $ex")
         }
     }
-    var UnZip=false
-    fun unzip(rout:String,version:String){
-        if(UnZip){return}
-        UnZip =true
-        val sourceDir = Paths.get("$rout/appData")
-        try {
-            val zipFileName = "$rout/VersionHistory/$version.zip"
-            ZipDir.zos = ZipOutputStream(FileOutputStream(zipFileName))
-            Files.walkFileTree(sourceDir, ZipDir(sourceDir))
-            ZipDir.zos.close()
-        } catch (ex: IOException) {
-            System.err.println("I/O Error: $ex")
+    //解壓縮檔案
+    fun unzip(zipFilePath: ByteArrayInputStream, destDirectory: String) {
+        val destDir = File(destDirectory)
+        if (!destDir.exists()) {
+            destDir.mkdir()
         }
-        UnZip =false
+        val zipIn = ZipInputStream((zipFilePath))
+        var entry = zipIn.nextEntry
+        while (entry != null) {
+            val filePath = destDirectory + File.separator.toString() + entry.name.replace("HellowWorld/","").replace("HellowWorld\\","")
+            if(!filePath.contains("__MACOSX")){
+                if (!entry.isDirectory) {
+                    // if the entry is a file, extracts it
+                    extractFile(zipIn, filePath)
+                } else {
+                    // if the entry is a directory, make the directory
+                    val dir = File(filePath)
+                    dir.mkdirs()
+                }
+            }
+            zipIn.closeEntry()
+            entry = zipIn.nextEntry
+        }
+        zipIn.close()
+    }
+    @Throws(IOException::class)
+    private fun extractFile(zipIn: ZipInputStream, filePath: String) {
+        File(filePath).parentFile.mkdirs()
+        val bos = BufferedOutputStream(FileOutputStream(filePath))
+        val bytesIn = ByteArray(4096)
+        var read = 0
+        while (zipIn.read(bytesIn).also { read = it } != -1) {
+            bos.write(bytesIn, 0, read)
+        }
+        bos.close()
     }
 }
 

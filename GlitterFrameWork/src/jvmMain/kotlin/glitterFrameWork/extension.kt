@@ -1,5 +1,7 @@
 package glitterFrameWork
 
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.HttpURLConnection
@@ -166,7 +168,36 @@ object JzUtil {
             return null
         }
     }
+    fun getRequest(
+        url: String, timeout: Int
+    ): ByteArrayOutputStream? {
+        try {
+            val conn: HttpURLConnection = URL(url).openConnection() as HttpURLConnection
+            conn.connectTimeout = timeout
+            conn.readTimeout = timeout
+            conn.requestMethod = "GET"
+            conn.doInput = true;
+            val buffer = ByteArray(1024)
+            val reader = DataInputStream(conn.inputStream)
+            var strBuf = ByteArrayOutputStream()
+            var downLoad = 0L
+            reader.use {
+                var read: Int
+                while (reader.read(buffer).also { read = it } != -1) {
+                    downLoad += read
+                    strBuf.writeBytes(buffer.copyOfRange(0, read))
+                }
+            }
+            reader.close()
+            return strBuf
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 }
+
+
 
 //将utf-8的汉字转换成unicode格式汉字码
 fun String.stringToUnicode(): String? {
