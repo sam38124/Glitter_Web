@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GlitterFrameWork-jvm-2.28">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="GlitterFrameWork-jvm-2.28.jar" />
+  </artifact>
+</component>

@@ -20,8 +20,13 @@ import io.ktor.routing.post
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.sessions.sessions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStream
+import java.nio.charset.Charset
 import java.sql.ResultSetMetaData
 import java.util.*
 import kotlin.collections.ArrayList
@@ -95,29 +100,42 @@ object Glitter {
             }
             //定義你的API函式
             post("/PostApi") {
-                val mapData = Gson().fromJson<MutableMap<String, Any>>(
-                    call.receiveText(),
-                    object : TypeToken<MutableMap<String, Any>>() {}.type
-                )
-                val functionName = mapData["functionName"] as String
-                val routName = mapData["routName"] as String
-                val receiveValue: MutableMap<String, Any> =
-                    if (mapData["data"] == null) mutableMapOf() else (mapData["data"] as MutableMap<String, Any>)
-                val cFunction = ApiInterFace.apiInterFace.filter {
-                    (it.functionName == functionName) && (it.rout == routName)
+                withContext(Dispatchers.IO) {
+                    val buffer = ByteArray(1024)
+                    val wr = ByteArrayOutputStream()
+                    call.receive<InputStream>().use {
+                        var read: Int
+                        while (it.read(buffer).also { read = it } != -1) {
+                            wr.write(buffer, 0, read)
+                            wr.flush()
+                        }
+                    }
+                    val text = String(wr.toByteArray(), Charset.forName("UTF-8"))
+                    val mapData = Gson().fromJson<MutableMap<String, Any>>(
+                        text,
+                        object : TypeToken<MutableMap<String, Any>>() {}.type
+                    )
+                    val functionName = mapData["functionName"] as String
+                    val routName = mapData["routName"] as String
+                    val receiveValue: MutableMap<String, Any> =
+                        if (mapData["data"] == null) mutableMapOf() else (mapData["data"] as MutableMap<String, Any>)
+                    val cFunction = ApiInterFace.apiInterFace.filter {
+                        (it.functionName == functionName) && (it.rout == routName)
+                    }
+                    val requestFunction = RequestFunction(receiveValue)
+                    cFunction.map {
+                        it.function(requestFunction)
+                    }
+                    if (cFunction.isEmpty()) {
+                        requestFunction.responseValue["result"] = "Function is not define"
+                    }
+                    if (ApiInterFace.deBugMode) {
+                        println("functionName->${functionName}")
+                        println("requestValue->${requestFunction.receiveValue}")
+                        println("functionName->${requestFunction.responseValue}")
+                    }
+                    call.respondText(Gson().toJson(requestFunction.responseValue), ContentType.Text.Plain)
                 }
-                val requestFunction = RequestFunction(receiveValue)
-                if (cFunction.isNotEmpty()) {
-                    cFunction[0].function(requestFunction)
-                }else{
-                    requestFunction.responseValue["result"]="Function is not define"
-                }
-                if(ApiInterFace.deBugMode){
-                    println("functionName->${functionName}")
-                    println("requestValue->${requestFunction.receiveValue}")
-                    println("functionName->${requestFunction.responseValue}")
-                }
-                call.respondText(Gson().toJson(requestFunction.responseValue), ContentType.Text.Plain)
             }
             //查詢DataBase
             post("/DataBase/Query") {

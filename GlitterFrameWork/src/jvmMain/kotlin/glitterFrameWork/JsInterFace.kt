@@ -55,6 +55,9 @@ class ApiInterFace(val rout:String,val functionName:String,val function:(request
     //DebugMode
     var deBugMode=false
     }
+    init {
+        addApiInterFace(this)
+    }
 }
 
 data class RequestFunction(val receiveValue:MutableMap<String,Any>, var responseValue:MutableMap<String,Any> = mutableMapOf())
